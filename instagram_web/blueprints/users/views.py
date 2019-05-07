@@ -48,8 +48,12 @@ def index():
 
 @users_blueprint.route('/<id>/edit', methods=["GET"])
 def edit(id):
-    return render_template('edit_details.html', user=User.get_by_id(id))
     user = User.get_by_id(id)
+    if current_user == user:
+        return render_template('edit_details.html')
+    else:
+        flash('You cannot do this action.')
+        return redirect(url_for('home'))
 
 
 @users_blueprint.route('/<id>', methods=["POST"])
