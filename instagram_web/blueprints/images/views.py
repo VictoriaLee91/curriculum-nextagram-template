@@ -1,4 +1,5 @@
 from instagram_web.blueprints.images.helpers import *
+from config import S3_BUCKET
 from flask import Flask, Blueprint, request, redirect, render_template, flash
 from flask_login import login_required
 from models.user import User
@@ -27,8 +28,10 @@ def upload_file():
 
     if file and allowed_file(file.filename):
         file.filename = secure_filename(file.filename)
-        output = upload_file_to_s3(file, app.config["S3_BUCKET"])
-        return str(output)
+        output = upload_file_to_s3(file, S3_BUCKET)
+        flash(f'Photo successfully uploaded')
+        return render_template('upload_pictures.html')
+        # try to return it to the database
 
     else:
-        return redirect("/")
+        return redirect(url_for('home'))

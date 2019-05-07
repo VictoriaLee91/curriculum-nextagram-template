@@ -50,7 +50,7 @@ def index():
 def edit(id):
     user = User.get_by_id(id)
     if current_user == user:
-        return render_template('edit_details.html')
+        return render_template('edit_details.html', user=user)
     else:
         flash('You cannot do this action.')
         return redirect(url_for('home'))
