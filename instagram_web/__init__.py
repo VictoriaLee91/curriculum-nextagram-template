@@ -7,6 +7,8 @@ from instagram_web.blueprints.sessions.views import sessions_blueprint
 from flask_assets import Environment, Bundle
 from .util.assets import bundles
 
+app = Flask(__name__)
+app.config.from_object("config")  # or is it from app.py?
 assets = Environment(app)
 assets.register(bundles)
 
