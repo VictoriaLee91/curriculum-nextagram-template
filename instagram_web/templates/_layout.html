@@ -52,6 +52,12 @@
         <li class="nav-item">
           <a class="nav-link" href="/users/new">Sign Up</a>
         </li>
+
+        {% if current_user.is_authenticated %}
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('users.update', id=current_user.id) }}">Edit profile</a>
+          {% endif %}
+        </li>
       </ul>
       <form class="form-inline my-2 my-lg-0">
         <input class="form-control mr-sm-2" type="search" placeholder="Search">
