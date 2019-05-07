@@ -48,8 +48,12 @@ def index():
 
 @users_blueprint.route('/<id>/edit', methods=["GET"])
 def edit(id):
-    return render_template('edit_details.html', user=User.get_by_id(id))
     user = User.get_by_id(id)
+    if current_user == user:
+        return render_template('edit_details.html', user=user)
+    else:
+        flash('You cannot do this action.')
+        return redirect(url_for('home'))
 
 
 @users_blueprint.route('/<id>', methods=["POST"])
@@ -64,14 +68,16 @@ def update(id):
         new_user_name = request.form.get('new_user_name')
         new_email = request.form.get('new_email')
         new_password = request.form.get('new_password')
+        hashed_password = generate_password_hash
+        (new_password)
 
         update_user = User.update(
-            username=new.user_name,
+            username=new_user_name,
             email=new_email,
             password=new_password
         ).where(User.id == id)
 
-    if not update_user.exceute():
+    if not update_user.execute():
         flash(f"Unable to update, please try again")
         return render_template('edit_details.html', user=user)
 
