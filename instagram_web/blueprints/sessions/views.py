@@ -43,4 +43,5 @@ def settings():
 @login_required
 def logout():
     logout_user()
+    flash("You have successfully logged out.")
     return redirect(url_for('sessions.show'))

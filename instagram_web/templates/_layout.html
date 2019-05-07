@@ -21,6 +21,7 @@
 
 <body>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <img src="{{url_for('static', filename='favicon.jpg')}}" />
     <a class="navbar-brand" href="/">Nextagram</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"
       aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,6 +51,12 @@
 
         <li class="nav-item">
           <a class="nav-link" href="/users/new">Sign Up</a>
+        </li>
+
+        {% if current_user.is_authenticated %}
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('users.update', id=current_user.id) }}">Edit profile</a>
+          {% endif %}
         </li>
       </ul>
       <form class="form-inline my-2 my-lg-0">
