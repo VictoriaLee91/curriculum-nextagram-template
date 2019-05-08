@@ -41,9 +41,53 @@ def create():
 #     pass
 
 
-@users_blueprint.route('/', methods=["GET"])
+@users_blueprint.route('/index', methods=["GET"])
 def index():
-    return "USERS"
+    return render_template('index.html', users=User.select())
+
+
+@users_blueprint.route("/<username>/profilepage", methods=["GET"])
+def profilepage(username):
+    user = User.get_or_none(User.username == username)
+    if not user:
+        flash('Nope.')
+    else:
+        return render_template('profile_page.html', user=user)
+
+
+@users_blueprint.route("/uploadprofile", methods=["GET"])
+def change_picture():
+    # profile_image = User.get_or_none(User.profile_image == profile_image)
+    return render_template('update_profile.html')
+
+
+@users_blueprint.route("/new_uploadprofile", methods=["POST"])
+def upload_profile():
+    if 'profile_image' not in request.files:
+        flash(f"No user image key in request.files")
+        return redirect(url_for('home'))
+
+    file = request.files['profile_image']
+
+    if file.filename == "":
+        return "Please select a file"
+
+    if file and allowed_file(file.filename):
+        file.filename = secure_filename(file.filename)
+        output = upload_file_to_s3(file, S3_BUCKET)
+
+        update_profile_image = User.update(
+            profile_image=file.filename).where(User.id == current_user.id)
+
+        if update_profile_image.execute():
+            flash(f'Photo successfully uploaded.')
+            return render_template('update_profile.html')
+        else:
+            flash(f'Unable to upload picture. Please try again.')
+            return render_template('update_profile.html')
+
+    else:
+        return redirect(url_for('home'))
 
 
 @users_blueprint.route('/<id>/edit', methods=["GET"])
@@ -74,7 +118,7 @@ def update(id):
         update_user = User.update(
             username=new_user_name,
             email=new_email,
-            password=new_password
+            password=hashed_password
         ).where(User.id == id)
 
     if not update_user.execute():

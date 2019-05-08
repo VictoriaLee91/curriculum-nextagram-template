@@ -2,13 +2,15 @@ from models.base_model import BaseModel
 from flask_login import LoginManager
 import peewee as pw
 import re
+from config import AWS_LINK
+from playhouse.hybrid import hybrid_property
 
 
 class User(BaseModel):
     username = pw.CharField(unique=True, null=False)
     email = pw.CharField(unique=True, null=False)
     password = pw.CharField(null=False)
-    profile_image = pw.CharField(null=True)
+    profile_image = pw.CharField(null=True, default=None)
 
     def validate(self):
         duplicate_username = User.get_or_none(User.username == self.username)
@@ -56,3 +58,7 @@ class User(BaseModel):
 
     def get_id(self):
         return self.id
+
+    @hybrid_property
+    def profile_image_url(self):
+        return f'{AWS_LINK}/{self.profile_image}'
