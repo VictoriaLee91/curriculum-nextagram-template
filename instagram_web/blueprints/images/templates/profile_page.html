@@ -1,0 +1,26 @@
+{% extends "_layout.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Profile Page</title>
+</head>
+
+<body>
+    <img src="{{user.profile_image_url}}" width="100" height="100">
+    <h3>{{user.username}}</h3>
+    <h5>Say something about yourself</h5>
+    <!-- display user images here -->
+    <div>
+        {% for image in user.images %}
+        <img src="{{ image.user.image_url }}">
+        {% endfor %}
+    </div>
+</body>
+
+</html>
+{% endblock %}
