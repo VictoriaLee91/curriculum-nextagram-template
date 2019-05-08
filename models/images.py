@@ -12,5 +12,5 @@ class Images(BaseModel):
     user = pw.ForeignKeyField(User, backref='images')
 
     @hybrid_property
-    def profile_image_url(self):
-        return f'{AWS_LINK}/{self.profile_image}'
+    def image_url(self):
+        return f'{AWS_LINK}/{self.image}'

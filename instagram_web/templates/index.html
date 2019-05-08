@@ -12,8 +12,12 @@
 
 <body>
     <h1> Users </h1>
-    <h3>{{user.username}}</h3>
-    <img src="{{user.profile_image_url}}" width="100" height="100">
+    {% for user in users %}
+    <li>
+        <h3>{{user.username}}</h3>
+        <img src="{{user.profile_image_url}}" width="250" height="250">
+    </li>
+    {% endfor %}
 </body>
 
 </html>
