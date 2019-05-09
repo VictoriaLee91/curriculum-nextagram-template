@@ -17,7 +17,7 @@
     <!-- display user images here -->
     <div>
         {% for image in user.images %}
-        <img src="{{ image.user.image_url }}">
+        <img src="{{ current_user.image_url }}" width="300" height="300">
         {% endfor %}
     </div>
 </body>

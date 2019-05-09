@@ -2,7 +2,9 @@ import os
 from flask import Flask, Blueprint, request, redirect, url_for, render_template, flash
 from flask_login import current_user
 from models.user import User
+from instagram_web.blueprints.images.helpers import *
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug import secure_filename
 
 users_blueprint = Blueprint('users',
                             __name__,
