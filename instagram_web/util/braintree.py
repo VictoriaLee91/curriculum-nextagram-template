@@ -1,4 +1,5 @@
 import braintree
+from config import MERCHANT_ID, PUBLIC_KEY, PRIVATE_KEY
 import os
 
 gateway = braintree.BraintreeGateway(
