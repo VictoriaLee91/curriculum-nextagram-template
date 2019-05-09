@@ -1,5 +1,6 @@
 from models.base_model import BaseModel
 from models.user import User
+from models.payments import Payments
 from flask_login import LoginManager
 import peewee as pw
 from playhouse.hybrid import hybrid_property
@@ -14,3 +15,8 @@ class Images(BaseModel):
     @hybrid_property
     def image_url(self):
         return f'{AWS_LINK}/{self.image}'
+
+    @hybrid_property
+    def total_payments(self):
+        total_payments = Payments.select(
+            fn.SUM(Payments.amount)).where(Payments.image_id == self.id)
