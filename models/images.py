@@ -13,4 +13,10 @@ class Images(BaseModel):
 
     @hybrid_property
     def image_url(self):
-        return f'{AWS_LINK}/{self.image}'
+        return f'{AWS_LINK}/{self.user_image}'
+
+    @hybrid_property
+    def total_payments(self):
+        from models.payments import Payments
+        total_payments = Payments.select(
+            fn.SUM(Payments.amount)).where(Payments.image_id == self.id)
