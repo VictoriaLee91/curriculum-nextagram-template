@@ -26,15 +26,15 @@ def create(image_id):
     image = Images.get_or_none(Images.id == image_id)
 
     if not image:
-        flash('no image found')
+        flash('no image found', 'warning')
         return redirect(url_for('home'))
 
     if not amount:
-        flash('no amount specified')
+        flash('no amount specified', 'warning')
         return redirect(url_for('payments.new', image_id=image.id))
 
     if not payment_nonce:
-        flash('Error with payment, please try again.')
+        flash('Error with payment, please try again.', 'warning')
         return redirect(url_for('users.show', username=Images.user.username))
 
     if result != complete_transaction(payment_nonce, amount):
