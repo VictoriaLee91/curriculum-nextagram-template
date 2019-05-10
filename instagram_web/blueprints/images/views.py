@@ -1,4 +1,4 @@
-from instagram_web.blueprints.images.helpers import *
+from instagram_web.util.helpers import *
 from config import S3_BUCKET
 from flask import Flask, Blueprint, request, redirect, render_template, flash, url_for
 from flask_login import login_required, current_user

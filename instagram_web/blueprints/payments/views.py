@@ -19,15 +19,15 @@ def new():
     return render_template('payments/new.html', client_token=client_token)
 
 
-@payments_blueprint.route('/<image_id>/payment', methods=["POST"])
-def create(image_id):
+@payments_blueprint.route('/payment', methods=["POST"])
+def create():
     payment_nonce = request.form.get('')
     amount = request.form.get('payment_amount')
-    image = Images.get_or_none(Images.id == image_id)
+    # image = Images.get_or_none(Images.id == image_id)
 
-    if not image:
-        flash('no image found', 'warning')
-        return redirect(url_for('home'))
+    # if not image:
+    #     flash('no image found', 'warning')
+    #     return redirect(url_for('home'))
 
     if not amount:
         flash('no amount specified', 'warning')
@@ -44,15 +44,16 @@ def create(image_id):
     new_payment = Payments(
         user_id=current_user.id,
         amount=amount,
-        image_id=image.id
+        # image_id=image.id
     )
 
     if not new_payment.save():
         flash('Unable to complete payment', 'warning')
-        return redirect(url_for('payments.new', image_id == image.id))
+        return redirect(url_for('payments.new'))
+        #  image_id == image.id
 
     flash('payment successful')
-    return redirect(url_for('home'))
+    return redirect(url_for('show'))
 
 
 @payments_blueprint.route('/<transaction_id>', methods=['GET'])
