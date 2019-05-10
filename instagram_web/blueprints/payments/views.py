@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, redirect, request, flash, url_for
 from models.images import Images
 from models.payments import Payments
 from instagram_web.util.braintree import complete_transaction, generate_client_token
+from instagram_web.util.sendgrid import *
 
 payments_blueprint = Blueprint(
     'payments', __name__, template_folder='templates')

@@ -18,6 +18,7 @@
     <div>
         {% for image in user.images %}
         <img src="{{ image.image_url }}" width="300" height="300">
+        <button class="btn btn-info" href="/payments/new">Donate money</button>
         {% endfor %}
     </div>
 </body>
