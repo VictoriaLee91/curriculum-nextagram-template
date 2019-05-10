@@ -62,12 +62,14 @@ def show(transaction_id):
     transaction = find_transaction(transaction_id)
     result = {}
     if transaction.status in TRANSACTION_SUCCESS_STATUSES:
+        return email()
         result = {
             'header': 'Sweet Success!',
             'icon': 'success',
             'message': 'Your test transaction has been successfully processed. See the Braintree API response and try again.'
         }
     else:
+        return email()
         result = {
             'header': 'Transaction Failed',
             'icon': 'fail',
