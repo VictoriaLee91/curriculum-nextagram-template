@@ -20,44 +20,46 @@ def new():
     return render_template('payments/new.html', client_token=client_token)
 
 
-@payments_blueprint.route('/payment', methods=["POST"])
-def create():
-    payment_nonce = request.form.get('')
-    amount = request.form.get('payment_amount')
-    # image = Images.get_or_none(Images.id == image_id)
+# @payments_blueprint.route('/payment', methods=["POST"])
+# def create():
+#     payment_nonce = request.form.get('')
+#     amount = request.form.get('payment_amount')
+#     # image = Images.get_or_none(Images.id == image_id)
 
-    # if not image:
-    #     flash('no image found', 'warning')
-    #     return redirect(url_for('home'))
+#     if not image:
+#         flash('no image found', 'warning')
+#         return redirect(url_for('home'))
 
-    if not amount:
-        flash('no amount specified', 'warning')
-        return redirect(url_for('payments.new', image_id=image.id))
+#     if not amount:
+#         flash('no amount specified', 'warning')
+#         return redirect(url_for('payments.new'))
+#         # , image_id=image.id
 
-    if not payment_nonce:
-        flash('Error with payment, please try again.', 'warning')
-        return redirect(url_for('users.show', username=Images.user.username))
+#     if not payment_nonce:
+#         flash('Error with payment, please try again.', 'warning')
+#         return redirect(url_for('users.show', username=Images.user.username))
 
-    if result != complete_transaction(payment_nonce, amount):
-        flash('oops', 'warning')
-        return redirect(url_for('payments.new', image_id == image.id))
+#     if not complete_transaction(payment_nonce, amount):
+#         flash('oops', 'warning')
+#         return redirect(url_for('payments.new'))
+#         # , image_id == image.id
 
-    new_payment = Payments(
-        user_id=current_user.id,
-        amount=amount,
-        # image_id=image.id
-    )
+#     new_payment = Payments(
+#         user_id=current_user.id,
+#         amount=amount,
+#         # image_id=image.id
+#     )
 
-    if not new_payment.save():
-        flash('Unable to complete payment', 'warning')
-        return redirect(url_for('payments.new'))
-        #  image_id == image.id
+#     if not new_payment.save():
+#         flash('Unable to complete payment', 'warning')
+#         return redirect(url_for('payments.new'))
+#         # image_id == image.id
 
-    flash('payment successful')
-    return redirect(url_for('show'))
+#     flash('payment successful')
+#     return redirect(url_for('show'))
 
 
-@payments_blueprint.route('/<transaction_id>', methods=['GET'])
+@payments_blueprint.route('/<transaction_id>', methods=["GET"])
 def show(transaction_id):
     transaction = find_transaction(transaction_id)
     result = {}
@@ -67,11 +69,12 @@ def show(transaction_id):
             'icon': 'success',
             'message': 'Your test transaction has been successfully processed. See the Braintree API response and try again.'
         }
-    else:
-        result = {
-            'header': 'Transaction Failed',
-            'icon': 'fail',
-            'message': 'Your test transaction has a status of ' + transaction.status + '. See the Braintree API response and try again.'
-        }
+    email()
 
+    result = {
+        'header': 'Transaction Failed',
+        'icon': 'fail',
+        'message': 'Your test transaction has a status of ' + transaction.status + '. See the Braintree API response and try again.'
+    }
+    email()
     return render_template('payments/show.html', transaction=transaction, result=result)
