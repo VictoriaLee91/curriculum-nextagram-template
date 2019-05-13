@@ -18,7 +18,7 @@
     <div>
         {% for image in user.images %}
         <img src="{{ image.image_url }}" width="300" height="300">
-        <a href="{{ url_for('payments.new') }}">Donate money</a>
+        <a class="btn btn-primary" href="{{ url_for('payments.index', id=image.id) }}">Donate money</a>
         {% endfor %}
     </div>
 </body>

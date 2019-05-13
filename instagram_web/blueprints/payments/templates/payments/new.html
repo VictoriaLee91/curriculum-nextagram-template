@@ -11,7 +11,8 @@
             </p>
         </header>
 
-        <form id="payment-form" method="post" action="{{ url_for('payments.new') }}">
+        <form id="payment-form" method="post" action="{{ url_for('payments.create', id=image.id) }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
             <section>
                 <label for="amount">
                     <span class="input-label">Amount</span>
@@ -39,9 +40,6 @@
     braintree.dropin.create({
         authorization: client_token,
         container: '#bt-dropin',
-        paypal: {
-            flow: 'vault'
-        }
     }, function (createErr, instance) {
         form.addEventListener('submit', function (event) {
             event.preventDefault();

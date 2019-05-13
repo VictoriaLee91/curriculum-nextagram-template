@@ -13,10 +13,15 @@ gateway = braintree.BraintreeGateway(
 
 
 def generate_client_token():
-    # client_token = gateway.client_token.generate({
-    #     "customer_id": a_customer_id
-    # })
     return gateway.client_token.generate()
+
+
+def transact(options):
+    return gateway.transaction.sale(options)
+
+
+def find_transaction(id):
+    return gateway.transaction.find(id)
 
 
 def complete_transaction(nonce, amount):
