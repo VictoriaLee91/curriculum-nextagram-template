@@ -1,66 +1,63 @@
 from flask import Blueprint, render_template, redirect, request, flash, url_for
+from flask_login import current_user
 from models.images import Images
 from models.payments import Payments
-from instagram_web.util.braintree import complete_transaction, generate_client_token
+from instagram_web.util.braintree import complete_transaction, generate_client_token, transact
 from instagram_web.util.sendgrid import *
+import braintree
 
 payments_blueprint = Blueprint(
     'payments', __name__, template_folder='templates')
 
+TRANSACTION_SUCCESS_STATUSES = [
+    braintree.Transaction.Status.Authorized,
+    braintree.Transaction.Status.Authorizing,
+    braintree.Transaction.Status.Settled,
+    braintree.Transaction.Status.SettlementConfirmed,
+    braintree.Transaction.Status.SettlementPending,
+    braintree.Transaction.Status.Settling,
+    braintree.Transaction.Status.SubmittedForSettlement,
 
-# @payments_blueprint.route('/', methods=["GET"])
-# def index():
-#     return render_template('payments/new.html')
+]
 
 
-@payments_blueprint.route('/new', methods=["GET"])
-def new():
-    # image = Images.get_or_none(Images.id == image_id)
+@payments_blueprint.route('/<id>/new', methods=["GET"])
+def index(id):
+    image = Images.get_by_id(id)
     client_token = generate_client_token()
-    return render_template('payments/new.html', client_token=client_token)
+    return render_template('payments/new.html', image=image, client_token=client_token)
 
 
-# @payments_blueprint.route('/payment', methods=["POST"])
-# def create():
-#     payment_nonce = request.form.get('')
-#     amount = request.form.get('payment_amount')
-#     # image = Images.get_or_none(Images.id == image_id)
+@payments_blueprint.route('/<id>/payment', methods=["POST"])
+def create(id):
+    image = Images.get_by_id(id)
+    payment_amount = request.form.get('amount')
+    result = transact({
+        'amount': request.form['amount'],
+        'payment_method_nonce': request.form['payment_method_nonce'],
+        'options': {
+            "submit_for_settlement": True
+        }
+    })
 
-#     if not image:
-#         flash('no image found', 'warning')
-#         return redirect(url_for('home'))
+    if result.is_success or result.transaction:
 
-#     if not amount:
-#         flash('no amount specified', 'warning')
-#         return redirect(url_for('payments.new'))
-#         # , image_id=image.id
+        new_payment = Payments(
+            image_id=image.id,
+            donor=current_user.id,
+            payment_amount=payment_amount
+        ).save()
+        return redirect(url_for('payments.show_checkout', transaction_id=result.transaction.id, id=image))
 
-#     if not payment_nonce:
-#         flash('Error with payment, please try again.', 'warning')
-#         return redirect(url_for('users.show', username=Images.user.username))
-
-#     if not complete_transaction(payment_nonce, amount):
-#         flash('oops', 'warning')
-#         return redirect(url_for('payments.new'))
-#         # , image_id == image.id
-
-#     new_payment = Payments(
-#         user_id=current_user.id,
-#         amount=amount,
-#         # image_id=image.id
-#     )
-
-#     if not new_payment.save():
-#         flash('Unable to complete payment', 'warning')
-#         return redirect(url_for('payments.new'))
-#         # image_id == image.id
-
-#     flash('payment successful')
-#     return redirect(url_for('show'))
+    else:
+        for x in result.errors.deep_errors:
+            flash('Error')
+        return redirect(url_for('payments.index', id=id))
 
 
-@payments_blueprint.route('/<transaction_id>', methods=["GET"])
-def show(transaction_id):
+@payments_blueprint.route('/<id>/<transaction_id>', methods=["GET"])
+def show_checkout(id, transaction_id):
+    image = Images.get_by_id(id)
     transaction = find_transaction(transaction_id)
     result = {}
     if transaction.status in TRANSACTION_SUCCESS_STATUSES:
@@ -77,4 +74,4 @@ def show(transaction_id):
         'message': 'Your test transaction has a status of ' + transaction.status + '. See the Braintree API response and try again.'
     }
     email()
-    return render_template('payments/show.html', transaction=transaction, result=result)
+    return render_template('payments/show.html', transaction=transaction, result=result, id=id)
