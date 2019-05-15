@@ -1,4 +1,5 @@
 from flask import Blueprint
+from flask_jwt import JWT, jwt_required
 
 users_api_blueprint = Blueprint('users_api',
                                 __name__,
@@ -18,11 +19,19 @@ def show(username):
     if not user:
         resp = {
             'message': 'No user found with this username.'
+            'ok': False
         }
 
+        return jsonify(resp)
 
-'user': {
-    'id': user.id,
-    'username': user.username,
-    'email': user.email
-}
+    resp = {
+        'message': 'Found user with this username',
+        'user': {
+            'id': user.id,
+            'username': user.username,
+            'email': user.email
+        }
+        'ok': True
+    }
+
+    return jsonify(resp)
