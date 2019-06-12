@@ -2,33 +2,34 @@
 {% block content %}
 
 <body>
-    <h1>Edit Details</h1>
+    <div class="content">
+        <h1>Edit Details</h1>
 
-    <form action="{{url_for('users.update', id=current_user.id)}}" method="POST">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-        <div class="form-row">
+        <form action="{{url_for('users.update', id=current_user.id)}}" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="username">Username</label>
+                    <input type="text" value="{{user.username}}" class="form-control" name="new_user_name"
+                        placeholder="Enter new username">
+                    <small id="user_name" class="form-text text-muted">Minimum 6 characters.</small>
+                </div>
+            </div>
             <div class="form-group col-md-6">
-                <label for="username">Username</label>
-                <input type="text" value="{{user.username}}" class="form-control" name="new_user_name"
-                    placeholder="Enter new username">
+                <label for="email_address">Email address</label>
+                <input type="email" value="{{user.email}}" class="form-control" name="new_email"
+                    placeholder="Enter new email">
+            </div>
+
+            <div class="form-group col-md-6">
+                <label for="exampleInputPassword1">Password</label>
+                <input type="password" value="{{user.password}}" class="form-control" name="new_password"
+                    placeholder="Enter new password">
                 <small id="user_name" class="form-text text-muted">Minimum 6 characters.</small>
             </div>
-        </div>
-        <div class="form-group col-md-6">
-            <label for="email_address">Email address</label>
-            <input type="email" value="{{user.email}}" class="form-control" name="new_email"
-                placeholder="Enter new email">
-        </div>
-
-        <div class="form-group col-md-6">
-            <label for="exampleInputPassword1">Password</label>
-            <input type="password" value="{{user.password}}" class="form-control" name="new_password"
-                placeholder="Enter new password">
-            <small id="user_name" class="form-text text-muted">Minimum 6 characters.</small>
-        </div>
-        <button type="submit" class="btn btn-primary">Save changes</button>
-        <button type="submit" class="btn btn-danger">Cancel</button>
-    </form>
-
+            <button type="submit" class="btn btn-primary">Save changes</button>
+            <button type="submit" class="btn btn-danger">Cancel</button>
+        </form>
+    </div>
 </body>
 {% endblock %}

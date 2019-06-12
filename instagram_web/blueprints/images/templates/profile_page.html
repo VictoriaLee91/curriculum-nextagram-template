@@ -11,38 +11,40 @@
 </head>
 
 <body>
-    <img src="{{user.profile_image_url}}" width="100" height="100">
-    <h3>{{user.username}}</h3>
-    <h5>Say something about yourself</h5>
+    <div class="content">
+        <img src="{{user.profile_image_url}}" width="100" height="100">
+        <h3>{{user.username}}</h3>
+        <h5>Say something about yourself</h5>
 
-    {% for idol in current_user.idols %}
+        {% for idol in current_user.idols %}
 
-    {% if idol.fan_id is current_user.id %}
+        {% if idol.fan_id is current_user.id %}
 
-    <form action="{{ url_for( 'followers.create', idol_id=user.id) }}" method="POST">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-        <button type="submit" class=" btn btn-info">Follow</button>
-    </form>
+        <form action="{{ url_for( 'followers.create', idol_id=user.id) }}" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+            <button type="submit" class=" btn btn-info">Follow</button>
+        </form>
 
-    {% else %}
+        {% else %}
 
-    <form action="{{url_for('followers.create', idol_id=user.id) }}" method="POST">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-        <button type="submit" class="btn btn-danger">Unfollow</button>
-    </form>
+        <form action="{{url_for('followers.create', idol_id=user.id) }}" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+            <button type="submit" class="btn btn-danger">Unfollow</button>
+        </form>
 
-    {% endif %}
-    {% endfor %}
-
-    <li>Followers: {{user.fans | length}}</li>
-    <li>Following: {{ user.idols | length}}</li>
-
-    <h4>Photos</h4>
-    <div>
-        {% for image in user.images %}
-        <img src="{{ image.image_url }}" width="300" height="300">
-        <a class="btn btn-primary" href="{{ url_for('payments.index', id=image.id) }}">Donate money</a>
+        {% endif %}
         {% endfor %}
+
+        <li>Followers: {{user.fans | length}}</li>
+        <li>Following: {{ user.idols | length}}</li>
+
+        <h4>Photos</h4>
+        <div>
+            {% for image in user.images %}
+            <img src="{{ image.image_url }}" width="300" height="300">
+            <a class="btn btn-primary" href="{{ url_for('payments.index', id=image.id) }}">Donate money</a>
+            {% endfor %}
+        </div>
     </div>
 </body>
 
