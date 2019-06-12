@@ -5,8 +5,8 @@ from playhouse.hybrid import hybrid_property
 
 
 class Followers(BaseModel):
-    fans = pw.ForeignKeyField(User, backref="idols")
-    idols = pw.ForeignKeyField(User, backref="fans")
+    fan = pw.ForeignKeyField(User, backref="idols")
+    idol = pw.ForeignKeyField(User, backref="fans")
     approved = pw.BooleanField(default=False)
 
     class Meta:
