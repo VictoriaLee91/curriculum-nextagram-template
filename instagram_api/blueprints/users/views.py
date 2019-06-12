@@ -31,8 +31,8 @@ def show(username):
             'id': user.id,
             'username': user.username,
             'email': user.email
-        }
-        'ok': True
+        },
+        'ok': 'True'
     }
 
     return jsonify(resp)
