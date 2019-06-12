@@ -19,6 +19,7 @@ def show(username):
     if not user:
         resp = {
             'message': 'No user found with this username.',
+            'ok': False
         }
         # 'ok': False
 
@@ -31,7 +32,7 @@ def show(username):
             'username': user.username,
             'email': user.email
         }
-        # 'ok': True
+        'ok': True
     }
 
     return jsonify(resp)
