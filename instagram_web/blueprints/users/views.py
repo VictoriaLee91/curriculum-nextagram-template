@@ -54,7 +54,7 @@ def profilepage(username):
     if not user:
         flash('Nope.')
     else:
-        return render_template('profile_page.html', user=user)
+        return render_template('profile_page.html', User=User)
 
 
 @users_blueprint.route("/uploadprofile", methods=["GET"])

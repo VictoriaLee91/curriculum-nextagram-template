@@ -11,16 +11,16 @@ def index():
     return "USERS API"
 
 
-@users_api_blueprint('/<username', methods=['POST'])
+@users_api_blueprint.route('/<username>', methods=['POST'])
 @jwt_required()  # read up on jwt in flask. install flask-jwt. follow documentation
 def show(username):
     user = User.get_or_none(User.username == username)
 
     if not user:
         resp = {
-            'message': 'No user found with this username.'
-            'ok': False
+            'message': 'No user found with this username.',
         }
+        # 'ok': False
 
         return jsonify(resp)
 
@@ -31,7 +31,7 @@ def show(username):
             'username': user.username,
             'email': user.email
         }
-        'ok': True
+        # 'ok': True
     }
 
     return jsonify(resp)
